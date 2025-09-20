@@ -1,52 +1,89 @@
 # Football Predictor Bot
 
-A Discord bot that provides football match predictions and real match results using slash commands.
+Discord bot with machine learning predictions for football matches.
+
+## Overview
+
+Built with Python, Discord.py, and scikit-learn. Uses real football data from API-Football to train a RandomForest model that predicts match outcomes.
+
+## Tech Stack
+
+- **Backend**: Python 3.13
+- **ML**: scikit-learn (RandomForestClassifier)
+- **Bot**: discord.py with slash commands
+- **Data**: API-Football API
+- **Storage**: JSON/CSV files
 
 ## Features
 
-- `/predict` - Get a hard-coded football match prediction
-- `/result` - Get the last match result between two specified teams (requires API key)
+- `/predict home_team away_team` - ML-powered match prediction with probabilities
+- `/result team1 team2` - Historical match results
+- Trained model with 71% accuracy on Premier League data
 
 ## Setup
 
-1. Install dependencies:
-   ```
+1. **Install dependencies**:
+   ```bash
    pip install -r requirements.txt
    ```
 
-2. Create a `.env` file with your tokens:
+2. **Create `.env` file**:
    ```
-   DISCORD_TOKEN=your_discord_bot_token_here
-   API_FOOTBALL_KEY=your_api_football_key_here
+   DISCORD_TOKEN=your_discord_bot_token
+   API_FOOTBALL_KEY=your_api_football_key
    ```
 
-3. Get your API-Football key:
-   - Visit [API-Football](https://apifootball.com/)
-   - Sign up for a free account
-   - Get your API key from the dashboard
-
-4. Run the bot:
+3. **Train the model**:
+   ```bash
+   python setup_ml_pipeline.py
    ```
+
+4. **Run the bot**:
+   ```bash
    python bot.py
    ```
 
+## ML Pipeline
+
+The bot includes a complete machine learning pipeline:
+
+1. **Data Collection** (`fetch_data.py`) - Pulls historical match events
+2. **Feature Engineering** (`build_features.py`) - Extracts team form, standings, H2H records
+3. **Model Training** (`train_model.py`) - Trains RandomForest on 6 features
+4. **Real-time Prediction** - Uses cached model for instant predictions
+
 ## Commands
 
-### `/predict`
-Returns a hard-coded match prediction.
+- `/predict Arsenal Chelsea` - Returns prediction with win/draw/loss probabilities
+- `/result Manchester United Liverpool` - Shows last match between teams
+- `/sync` - Manual command sync (admin only)
 
-### `/result team1 team2`
-Returns the last match result between two teams.
-- `team1`: First team name (e.g., "Manchester United")
-- `team2`: Second team name (e.g., "Liverpool")
+## Architecture
 
-Example: `/result Manchester United Liverpool`
+```
+bot.py (main)
+├── ML model loading & caching
+├── API data fetching
+├── Feature vector generation
+└── Discord slash command handlers
 
-## API Information
+data_pipeline/
+├── fetch_data.py - Historical data collection
+├── build_features.py - Feature engineering
+└── train_model.py - Model training & evaluation
+```
 
-This bot uses the API-Football service to fetch real match data. The free tier includes:
-- Limited requests per day
-- Access to head-to-head match data
-- Historical match results
+## API Usage
 
-For more information, visit [API-Football Documentation](https://apifootball.com/documentation-v1).
+Uses API-Football free tier:
+- Match events and standings
+- Head-to-head data
+- Rate limited to prevent 429 errors
+
+## Requirements
+
+See `requirements.txt` for full dependency list. Key packages:
+- discord.py
+- scikit-learn
+- pandas
+- aiohttp
