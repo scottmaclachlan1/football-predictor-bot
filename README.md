@@ -2,6 +2,8 @@
 
 Discord bot with machine learning predictions for football matches.
 
+<img width="634" height="307" alt="image" src="https://github.com/user-attachments/assets/4c4769e7-5dd1-4f19-a447-307b20c67d82" />
+
 ## Overview
 
 Built with Python, Discord.py, and scikit-learn. Uses real football data from API-Football to train a RandomForest model that predicts match outcomes.
